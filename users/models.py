@@ -1,4 +1,5 @@
-from django.db import models
+from django.db import models, IntegrityError
+from django.utils.text import slugify
 
 
 class User(models.Model):
@@ -12,10 +13,30 @@ class User(models.Model):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def create_for_name(cls, name):
+        # Creates a new user for this name, with a unique username
+        suffix = None
+        while True:
+            username = slugify(name)
+            if suffix is not None:
+                username = "{}-{}".format(username, suffix)
+                suffix += 1
+            else:
+                suffix = 1
+            try:
+                return cls.objects.create(username=username, name=name)
+            except IntegrityError:
+                continue
+
 
 class GoogleAccount(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="google_accounts"
+        User,
+        on_delete=models.CASCADE,
+        related_name="google_accounts",
+        null=True,
+        blank=True,
     )
     google_id = models.CharField(max_length=64, unique=True)
     email = models.EmailField()

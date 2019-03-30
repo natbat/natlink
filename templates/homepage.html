@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}natlink{% endblock %}
+
+{% block content %}
+
+<h1>The homepage</h1>
+
+{% if auth %}
+    You are signed in as {{ auth }} - <a href="/signout/">Sign out</a>
+{% else %}
+    <a href="/signin/">Sign in</a>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Sign in with Google{% endblock %}
+
+{% block content %}
+
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<meta name="google-signin-client_id" content="{{ google_client_id }}">
+
+<div class="g-signin2" data-onsuccess="onSignIn"></div>
+
+request.auth = {{ auth }}
+
+<script>
+function onSignIn(googleUser) {
+    let formData = new FormData();
+    formData.append('id_token', googleUser.getAuthResponse().id_token);
+    fetch("/signin/exchange-for-cookie/", {
+        body: formData,
+        method: "post"
+    }).then(r => r.json()).then(d => {
+        if (d.ok) {
+            window.location = "/";
+        } else {
+            alert(d.error);
+        }
+    });
+    var profile = googleUser.getBasicProfile();
+    window.profile = profile;
+    window.googleUser = googleUser;
+}
+</script>
+
+{% endblock %}

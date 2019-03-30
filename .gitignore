@@ -1,0 +1,10 @@
+# Local develompent scripts (may contain secrets in env vars)
+runserver.sh
+
+# Editor stuff
+.vscode
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
